@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Nez;
+using Nez.Console;
 
 namespace NEZFramework
 {
@@ -9,9 +10,8 @@ namespace NEZFramework
     {
         Texture2D playerTexture;
         private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        private SpriteBatch _spriteBatch;       
 
-      
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
