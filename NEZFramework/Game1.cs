@@ -1,63 +1,84 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Nez;
-using Nez.Console;
-using System.Collections;
+using Nez.Sprites;
+using Nez.Tweens;
 
 namespace NEZFramework
 {
     public class Game1 : Nez.Core
     {
-        Texture2D playerTexture;
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
-        private Vector2 _playerPosition;
-        private Vector2 _originalPosition;
-        private Vector2 _centerPosition;
+        private Entity _playerEntity;
+        private SpriteRenderer _spriteRenderer;
+
+        public Game1() : base() { }
 
         protected override void Initialize()
         {
             base.Initialize();
 
-            _spriteBatch = new SpriteBatch(Nez.Core.GraphicsDevice);
-            playerTexture = Content.Load<Texture2D>("tile_0097");
+            // Create a scene
+            var scene = new Scene();
+            scene.AddRenderer(new DefaultRenderer());
 
-            _originalPosition = new Vector2(50, 50);
-            _centerPosition = new Vector2(GraphicsDevice.Viewport.Width / 2 - playerTexture.Width / 2,
-                                          GraphicsDevice.Viewport.Height / 2 - playerTexture.Height / 2);
-            _playerPosition = _originalPosition;
+            // Load the texture
+            var texture = scene.Content.Load<Texture2D>("tile_0097");
 
-            // Start the coroutine
-            Core.StartCoroutine(MoveSpriteCoroutine());
+            // Create the player entity
+            _playerEntity = scene.CreateEntity("player");
+            _playerEntity.Position = new Vector2(50, 50); // Starting position
+
+            // Add a sprite renderer component
+            _spriteRenderer = _playerEntity.AddComponent(new SpriteRenderer(texture));
+
+            // Calculate center position
+            Vector2 centerPosition = new Vector2(
+                GraphicsDevice.Viewport.Width / 2 - texture.Width / 2,
+                GraphicsDevice.Viewport.Height / 2 - texture.Height / 2
+            );
+
+            // Manually create a Vector2Tween
+            var tween = new Vector2Tween();
+            tween.Initialize(new PositionTweenTarget(_playerEntity), centerPosition, 3f);
+            tween.SetEaseType(EaseType.QuartInOut);
+
+            // Start the tween
+            TweenManager.AddTween(tween);
+            tween.Start();
+
+            // Set the active scene
+            Scene = scene;
+        }
+    }
+
+    // Custom TweenTarget for Position
+    public class PositionTweenTarget : ITweenTarget<Vector2>
+    {
+        private Entity _entity;
+
+        public PositionTweenTarget(Entity entity)
+        {
+            _entity = entity;
         }
 
-        private IEnumerator MoveSpriteCoroutine()
+        public Vector2 GetTweenedValue()
         {
-            yield return Coroutine.WaitForSeconds(3f);
-            _playerPosition = _centerPosition;
-
-            yield return Coroutine.WaitForSeconds(3f);
-            _playerPosition = _originalPosition;
+            return _entity.Position;
         }
 
-        protected override void Update(GameTime gameTime)
+        public void SetTweenedValue(Vector2 value)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-            base.Update(gameTime);
+            _entity.Position = value;
         }
 
-        protected override void Draw(GameTime gameTime)
+        public void SetTweenedValue(float x, float y)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            _entity.Position = new Vector2(x, y);
+        }
 
-            _spriteBatch.Begin();
-            _spriteBatch.Draw(playerTexture, _playerPosition, Color.White);
-            _spriteBatch.End();
-
-            base.Draw(gameTime);
+        public object GetTargetObject()  // Required by ITweenTarget<Vector2>
+        {
+            return _entity;
         }
     }
 }

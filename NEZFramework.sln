@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEZFramework", "NEZFramework\NEZFramework.csproj", "{029FC275-0C11-4FC9-A767-365D1FA66673}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEZFramework", "NEZFramework\NEZFramework.csproj", "{029FC275-0C11-4FC9-A767-365D1FA66673}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nez.MG38", "NEZFramework\Nez-master\Nez.Portable\Nez.MG38.csproj", "{55A8BF8D-2F54-445C-A3EE-AA7669FF2319}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A0AE2589-B0E8-4756-A083-A9332210BEC7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
