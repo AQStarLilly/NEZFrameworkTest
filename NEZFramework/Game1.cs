@@ -76,7 +76,7 @@ namespace NEZFramework
             _entity.Position = new Vector2(x, y);
         }
 
-        public object GetTargetObject()  // Required by ITweenTarget<Vector2>
+        public object GetTargetObject()  
         {
             return _entity;
         }
